@@ -1,7 +1,7 @@
 {
   "name": "genetic-js",
-  "version": "0.1.14",
-  "description": "Advanced genetic and evolutionary algorithm library",
+  "version": "0.2.0",
+  "description": "Advanced genetic and evolutionary algorithm library with constraints",
   "main": "lib/genetic.js",
   "scripts": {
     "test": "make check"
@@ -22,8 +22,8 @@
   "license": "BSD",
   "readmeFilename": "README.md",
   "devDependencies": {
-    "browserify": "~5.10.0",
-    "uglify-js": "~2.4.15",
-	"mocha": "~1.21.4"
+    "browserify": "~17.0.0",
+    "uglify-js": "~3.14.0",
+    "mocha": "~1.21.4"
   }
 }
