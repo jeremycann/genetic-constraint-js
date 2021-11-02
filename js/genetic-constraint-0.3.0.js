@@ -1,3 +1,8 @@
+(function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(require,module,exports){
+
+window.Genetic = require('./genetic');
+
+},{"./genetic":2}],2:[function(require,module,exports){
 
 var Genetic = Genetic || (function () {
 
@@ -73,14 +78,30 @@ var Genetic = Genetic || (function () {
     return result;
   }
 
-  const runConstraintsOnChild = (entity, constraints) => {
+  const runConstraint = (entities, constraint) => {
+    const constrainedEntities = [];
+
+    for (const constraintName in constraint) {
+      if (Object.hasOwnProperty.call(constraint, constraintName)) {
+        const { exec, constraintParam } = constraint[constraintName];
+
+        for (const singleEntity of entities) {
+          constrainedEntities.push(exec(singleEntity, constraintParam));
+        }
+      }
+    }
+
+    return constrainedEntities;
+  }
+
+  const runConstraintChild = (entity, constraint) => {
     let mutableEntity = entity;
 
-    for (const constraint in constraints) {
-      if (Object.hasOwnProperty.call(constraints, constraint)) {
-        const { exec, constraintParams } = constraints[constraint];
+    for (const constraintName in constraint) {
+      if (Object.hasOwnProperty.call(constraint, constraintName)) {
+        const { exec, constraintParam } = constraint[constraintName];
 
-        mutableEntity = exec(mutableEntity, constraintParams);
+        mutableEntity = exec(mutableEntity, constraintParam);
       }
     }
 
@@ -252,6 +273,7 @@ var Genetic = Genetic || (function () {
           this.notification
           && (isFinished || this.configuration['skip'] == 0 || i % this.configuration['skip'] == 0)
         ) {
+          // this.sendNotification(pop.slice(0, this.maxResults), i, stats, isFinished);
           this.sendNotification(pop.slice(0, this.configuration['maxResults']), i, stats, isFinished);
         }
 
@@ -277,8 +299,8 @@ var Genetic = Genetic || (function () {
             const children = this.crossover(Clone(parents[0]), Clone(parents[1])).map(mutateOrNot);
 
             if (Object.keys(this.constraints).length !== 0) {
-              const constrainedChildren0 = runConstraintsOnChild(children[0], this.constraints);
-              const constrainedChildren1 = runConstraintsOnChild(children[1], this.constraints);
+              const constrainedChildren0 = runConstraintChild(children[0], this.constraints);
+              const constrainedChildren1 = runConstraintChild(children[1], this.constraints);
 
               newPop.push(constrainedChildren0, constrainedChildren1);
 
@@ -291,7 +313,7 @@ var Genetic = Genetic || (function () {
             const child = mutateOrNot(self.select1(pop));
 
             if (Object.keys(this.constraints).length !== 0) {
-              const constrainedChild = runConstraintsOnChild(child, this.constraints);
+              const constrainedChild = runConstraintChild(child, this.constraints);
 
               newPop.push(constrainedChild);
             } else {
@@ -333,6 +355,7 @@ var Genetic = Genetic || (function () {
     for (const name in constraints) {
       if (Object.hasOwnProperty.call(constraints, name)) {
         // constraintMethods {bitFix, drop, operation}
+        // const { exec, constraintMethod, constraintParam } = constraints[name]
         this.constraints[name] = constraints[name];
       }
     }
@@ -356,3 +379,5 @@ var Genetic = Genetic || (function () {
 if (typeof module != 'undefined') {
   module.exports = Genetic;
 }
+
+},{}]},{},[1]);

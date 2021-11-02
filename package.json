@@ -1,29 +1,30 @@
 {
   "name": "genetic-js",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Advanced genetic and evolutionary algorithm library with constraints",
   "main": "lib/genetic.js",
   "scripts": {
-    "test": "make check"
+    "test": "make check",
+    "build": "make build"
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/subprotocol/genetic-js"
+    "url": "git://github.com/jeremycann/genetic-constraint-js"
   },
   "bugs": {
-    "url": "https://github.com/subprotocol/genetic-js/issues"
+    "url": "https://github.com/jeremycann/genetic-constraint-js/issues"
   },
   "keywords": [
     "genetic",
     "evolution",
     "algorithm"
   ],
-  "author": "subprotocol <smprotocol@gmail.com> (http://subprotocol.com/)",
+  "author": "Jeremy Cannon <jdcannon@gmail.com> ",
   "license": "BSD",
   "readmeFilename": "README.md",
   "devDependencies": {
     "browserify": "~17.0.0",
     "uglify-js": "~3.14.0",
-    "mocha": "~1.21.4"
+    "mocha": "~6.2.3"
   }
 }

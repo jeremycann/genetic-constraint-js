@@ -100,7 +100,7 @@ describe("Selection", function() {
 			, "crossover": 1.0
 			, "fittestAlwaysSurvives": false
 		};
-		genetic.evolve(config, {"index": 0});
+		genetic.evolve(config, {"index": 0}, {});
 	});
 	
 	it("Tournament3", function (done) {
@@ -170,7 +170,7 @@ describe("Selection", function() {
 			, "crossover": 1.0
 			, "fittestAlwaysSurvives": false
 		};
-		genetic.evolve(config, {"index": 0});
+		genetic.evolve(config, {"index": 0}, {});
 	});
 	
 	it("RandomLinearRank", function (done) {
@@ -206,7 +206,7 @@ describe("Selection", function() {
 			, "crossover": 1.0
 			, "fittestAlwaysSurvives": false
 		};
-		genetic.evolve(config, {"index": 0});
+		genetic.evolve(config, {"index": 0}, {});
 	});
 	
 	it("FittestRandom", function (done) {

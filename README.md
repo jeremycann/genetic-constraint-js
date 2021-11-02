@@ -5,7 +5,7 @@ Advanced genetic and evolutionary algorithm library written in Javascript by [Su
 
 #### Rational
 
-The existing Javascript GA/EP library landscape could collectively be summed up as, meh. All that I required to take over the world was a lightweight, performant, feature-rich, nodejs + browser compatible, unit tested, and easily hackable GA/EP library.  Seamless [Web Worker](http://en.wikipedia.org/wiki/Web_worker) support would be the icing on my cake.
+The existing Javascript GA/EP library landscape could collectively be summed up as, meh. All that I required to take over the world was a lightweight, performant, feature-rich, nodejs + browser compatible, unit tested, and easily hackable GA/EP library.
 
 Until now, no such thing existed. Now you can have my cake, and optimize it too. Is it perfect? *Probably*. Regardless, this library is my gift to you.
 
@@ -105,8 +105,7 @@ genetic.select2 = Genetic.Select2.FittestRandom;
 | mutation              | 0.2      | [0.0, 1.0]  | Probability of mutation
 | iterations            | 100      | Real Number | Maximum number of iterations before finishing
 | fittestAlwaysSurvives | true     | Boolean     | Prevents losing the best fit between generations
-| maxResults            | 100      | Real Number | The maximum number of best-fit results that webworkers will send per notification
-| webWorkers            | true     | Boolean     | Use [Web Workers](http://en.wikipedia.org/wiki/Web_worker) (when available)
+| maxResults            | 100      | Real Number | The maximum number of best-fit results that will log per notification
 | skip                  | 0        | Real Number | Setting this higher throttles back how frequently `genetic.notification` gets called in the main thread.
 
 
@@ -115,7 +114,7 @@ genetic.select2 = Genetic.Select2.FittestRandom;
 To clone, build, and test Genetic.js issue the following command:
 
 ```bash
-git clone git@github.com:subprotocol/genetic-js.git && make distcheck
+git clone git@github.com:jeremycann/genetic-constraint-js.git && make distcheck
 ```
 
 | Command               | Description
