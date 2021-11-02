@@ -15,7 +15,7 @@ all: clean
 	ls -1 js/* | sed 's/^/  /'
 
 check:
-	@$(npmbin)/mocha --reporter spec
+	@$(npmbin)/mocha -slow=10 --reporter spec 
 
 distcheck: distclean all check
 
