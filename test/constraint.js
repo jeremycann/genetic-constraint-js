@@ -1,45 +1,11 @@
 var Genetic = require("../lib/genetic");
+const {
+  mustHaveConstraint,
+  mustExludeConstraint,
+  ifPickedKeepGroup,
+  ifPickedKeepGroupAlternative
+} = require('./utils');
 var assert = require("assert");
-
-function isEqual(a, b) {
-  // if length is not equal
-  if (a.length != b.length)
-    return false;
-  else {
-    // comapring each element of array
-    for (let i = 0; i < a.length; i++)
-      if (a[i] != b[i])
-        return false;
-    return true;
-  }
-}
-
-const mustHaveConstraint = (constraintParam) => ({
-  name: 'mustHave',
-  constraintMethod: 'fix',
-  constraintParams: constraintParam,
-  exec(pop, constraintArray) {
-    const mustHavePop = [];
-    for (let i = 0; i < pop.length; i++) {
-      mustHavePop.push(pop[i] | constraintArray[i]);
-    }
-    return mustHavePop;
-  }
-});
-
-const mustExludeConstraint = (constraintParam) => ({
-  name: 'mustExlude',
-  constraintMethod: 'fix',
-  constraintParams: constraintParam,
-  exec(pop, constraintArray) {
-    const mustHavePop = [];
-    for (let i = 0; i < pop.length; i++) {
-      mustHavePop.push(pop[i] & constraintArray[i]);
-    }
-    return mustHavePop;
-  }
-});
-
 
 var genetic;
 
@@ -132,9 +98,6 @@ describe("Constraints", function () {
       if (generation > 1) {
         for (let i = 0; i < pop.length; i++) {
           const singleGeneration = pop[i].entity;
-
-          // console.log(`entity ${i}`, pop[i].entity);
-          // console.log('generation', generation);
 
           assert.equal(singleGeneration[0], 1);
           assert.equal(singleGeneration[1], 1);
@@ -243,6 +206,82 @@ describe("Constraints", function () {
     const constraints = {
       mustHave: mustHaveConstraint([1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]),
       mustExclude: mustExludeConstraint([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]),
+    }
+
+    genetic.evolve(config, {}, constraints);
+  });
+
+  it("If Picked, then keep group", function () {
+    const keepIndexes = [0, 1, 2];
+
+    genetic.generation = function (pop, generation, stats, isFinished) {
+      if (generation > 1) {
+        for (let i = 0; i < pop.length; i++) {
+          const singleGeneration = pop[i].entity;
+
+          for (const index of keepIndexes) {
+            if (singleGeneration[index]) {
+              assert.equal(singleGeneration[0], 1);
+              assert.equal(singleGeneration[1], 1);
+              assert.equal(singleGeneration[2], 1);
+            } else {
+              assert.equal(singleGeneration[0], 0);
+              assert.equal(singleGeneration[1], 0);
+              assert.equal(singleGeneration[2], 0);
+            }
+          }
+        }
+      }
+    }
+
+    const config = {
+      iterations: 100,
+      size: 100,
+      crossover: 0.7,
+      mutation: 0.7,
+    };
+
+    const constraints = {
+      ifPickedKeepGroup: ifPickedKeepGroup([keepIndexes, [1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]])
+    }
+
+    genetic.evolve(config, {}, constraints);
+  });
+
+  it("If Picked, then keep group alternative", function () {
+    const keepIndexes = [3, 4, 5];
+
+    genetic.generation = function (pop, generation, stats, isFinished) {
+      if (generation > 1) {
+        for (let i = 0; i < pop.length; i++) {
+          const singleGeneration = pop[i].entity;
+
+          const isGrouped = keepIndexes.some(index => singleGeneration[index] === 1);
+
+          if (isGrouped) {
+            assert.equal(singleGeneration[3], 1);
+            assert.equal(singleGeneration[4], 1);
+            assert.equal(singleGeneration[5], 1);
+            // assert.equal(singleGeneration[6], 1);
+          } else {
+            assert.equal(singleGeneration[3], 0);
+            assert.equal(singleGeneration[4], 0);
+            assert.equal(singleGeneration[5], 0);
+            // assert.equal(singleGeneration[6], 0);
+          }
+        }
+      }
+    }
+
+    const config = {
+      iterations: 100,
+      size: 100,
+      crossover: 0.7,
+      mutation: 0.7,
+    };
+
+    const constraints = {
+      ifPickedKeepGroup: ifPickedKeepGroupAlternative(keepIndexes)
     }
 
     genetic.evolve(config, {}, constraints);
