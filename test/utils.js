@@ -89,9 +89,37 @@ const ifPickedKeepGroupAlternative = (indexesParam) => ({
   }
 });
 
+const ifPickedOnlyIncludeOne = (indexesParam) => ({
+  name: 'ifPickedOnlyIncludeOne',
+  constraintMethod: 'fix',
+  constraintParams: indexesParam,
+  exec(pop, indexes) {
+    outerLoopInclude:
+    for (const possiblySelected of indexes) {
+      for (let j = 0; j < pop.length; j++) {
+        const isSelected = pop[possiblySelected] === 1;
+
+        if (isSelected) {
+          const randomIndex = Math.floor(Math.random() * (indexes.length));
+          const selectIndex = indexes[randomIndex];
+
+          for (const deselectIndexes of indexes) {
+            pop[deselectIndexes] = 0;
+          }
+
+          pop[selectIndex] = 1;
+          break outerLoopInclude;
+        }
+      }
+    }
+    return pop;
+  }
+});
+
 module.exports = {
   mustHaveConstraint,
   mustExludeConstraint,
   ifPickedKeepGroup,
-  ifPickedKeepGroupAlternative
+  ifPickedKeepGroupAlternative,
+  ifPickedOnlyIncludeOne
 };

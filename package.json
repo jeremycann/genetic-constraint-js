@@ -1,6 +1,6 @@
 {
   "name": "genetic-constraint-js",
-  "version": "0.3.2",
+  "version": "0.3.3",
   "description": "Advanced genetic and evolutionary algorithm library with constraints",
   "main": "lib/genetic.js",
   "scripts": {

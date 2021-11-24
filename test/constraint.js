@@ -3,7 +3,8 @@ const {
   mustHaveConstraint,
   mustExludeConstraint,
   ifPickedKeepGroup,
-  ifPickedKeepGroupAlternative
+  ifPickedKeepGroupAlternative,
+  ifPickedOnlyIncludeOne,
 } = require('./utils');
 var assert = require("assert");
 
@@ -224,6 +225,7 @@ describe("Constraints", function () {
               assert.equal(singleGeneration[0], 1);
               assert.equal(singleGeneration[1], 1);
               assert.equal(singleGeneration[2], 1);
+              break;
             } else {
               assert.equal(singleGeneration[0], 0);
               assert.equal(singleGeneration[1], 0);
@@ -249,7 +251,7 @@ describe("Constraints", function () {
   });
 
   it("If Picked, then keep group alternative", function () {
-    const keepIndexes = [3, 4, 5];
+    const keepIndexes = [3, 4, 5, 6];
 
     genetic.generation = function (pop, generation, stats, isFinished) {
       if (generation > 1) {
@@ -262,12 +264,12 @@ describe("Constraints", function () {
             assert.equal(singleGeneration[3], 1);
             assert.equal(singleGeneration[4], 1);
             assert.equal(singleGeneration[5], 1);
-            // assert.equal(singleGeneration[6], 1);
+            assert.equal(singleGeneration[6], 1);
           } else {
             assert.equal(singleGeneration[3], 0);
             assert.equal(singleGeneration[4], 0);
             assert.equal(singleGeneration[5], 0);
-            // assert.equal(singleGeneration[6], 0);
+            assert.equal(singleGeneration[6], 0);
           }
         }
       }
@@ -282,6 +284,46 @@ describe("Constraints", function () {
 
     const constraints = {
       ifPickedKeepGroup: ifPickedKeepGroupAlternative(keepIndexes)
+    }
+
+    genetic.evolve(config, {}, constraints);
+  });
+
+  it("If Picked, then keep only One of Group", function () {
+    const keepIndexes = [1, 3, 4, 8];
+
+    genetic.generation = function (pop, generation, stats, isFinished) {
+      if (generation > 2) {
+        for (let i = 0; i < pop.length; i++) {
+          const singleGeneration = pop[i].entity;
+          const isKept = keepIndexes.findIndex(possiblySelected => singleGeneration[possiblySelected] === 1);
+
+          if (isKept !== -1) {
+            for (const possiblyKept of keepIndexes) {
+              if (possiblyKept === keepIndexes[isKept]) {
+                assert.equal(singleGeneration[possiblyKept], 1);
+              } else {
+                assert.equal(singleGeneration[possiblyKept], 0);
+              }
+            }
+          } else {
+            for (const didNotKeep of keepIndexes) {
+              assert.equal(singleGeneration[didNotKeep], 0);
+            }
+          }
+        }
+      }
+    }
+
+    const config = {
+      iterations: 100,
+      size: 100,
+      crossover: 0.7,
+      mutation: 0.7,
+    };
+
+    const constraints = {
+      ifPickedOnlyIncludeOne: ifPickedOnlyIncludeOne(keepIndexes)
     }
 
     genetic.evolve(config, {}, constraints);
